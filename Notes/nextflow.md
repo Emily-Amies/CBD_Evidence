@@ -1,12 +1,12 @@
 <span style="font-size: 2em; font-weight: bold; color: teal;">Nextflow</span>
 
-# Intro
+# 1. Intro
 
 Nextflow is a workflow language to make reproducible workflows at scale.
 
-# Running a Workflow
+# 2. Running a Workflow
 
-## nextflow run
+## 2.1. nextflow run
 
 You can run a workflow using `nextflow run`.
 
@@ -14,7 +14,7 @@ You can run a workflow using `nextflow run`.
 nextflow run <script_name.nf>
 ```
 
-## Nextflow Subcommands
+## 2.2. Nextflow Subcommands
 
 Nextflow comes with lots of builtin **subcommands**. You can see what a subcommand does using `nextflow help`.
 
@@ -22,7 +22,7 @@ Nextflow comes with lots of builtin **subcommands**. You can see what a subcomma
 nextflow help <subcommand name>
 ```
 
-### Options
+### 2.2.1. Options
 
 Core **options** like `resume` or `version` have one `-`.
 
@@ -34,7 +34,7 @@ User defined options like `output` have two `--`.
 
 https://www.nextflow.io/docs/latest/reference/cli.html 
 
-## The work Directory
+## 2.3. The work Directory
 
 Each process can generate one or multiple **tasks**. These get a **task hash**. When Nextflow runs, it creates a directory called `work` which has subdirectories for the working directories of all the tasks. These contain the output files for each task. 
 
@@ -64,11 +64,11 @@ You can remove files from work using `nextflow clean`. The `-before` option can 
 nextflow clean -before run_name -f
 ```
 
-## output
+## 2.4. output
 
 By default nextflow puts output in a `results` directory. This contains soft links to output in the task subdirectories. You can change this name using `-o newname` or `-output-dir newname` when running the pipeline.
 
-## resume
+## 2.5. resume
 
 Adding `-resume` to the nextflow run command means that the workflow will look for intermediate data in the `work` directory and use those. The task hash will be the same as the original run. This is useful if the pipeline fails or during development of a pipeline.
 
@@ -78,7 +78,7 @@ You can use `nextflow log` to see previous runs. This information can also be fo
 nextflow run hello-world.nf -resume run_name
 ```
 
-## Running From Remote Repos
+## 2.6. Running From Remote Repos
 
 You can run pipelines from remote repos, like GitHub, without manually downloading it first. The first time it is run, Nextflow downloads and chaches it locally. By default, Nextflow runs the latest version from the default branch. You can specify a version (tag), branch or commit using `-r`.
 
@@ -86,9 +86,9 @@ You can run pipelines from remote repos, like GitHub, without manually downloadi
 nextflow run <repo> -r v1.3
 ```
 
-# Writing Workflows
+# 3. Writing Workflows
 
-## Processes
+## 3.1. Processes
 
 **Processes** hold a unit of logic for your workflow. It starts with the `process` keyword followed by the process name.
 
@@ -108,7 +108,7 @@ process sayHello {
 }
 ```
 
-### input
+### 3.1.1. input
 
 `input` - expected input. You can have as many inputs as you like. When using them in the workflow, pass them as arguments in the exact same order.
 
@@ -122,7 +122,7 @@ val batch_name
 myProcess(params.input_file, params.batch_name)
 ```
 
-### output
+### 3.1.2. output
 
 `output` - tells what output to expect from the script. Required. Doesn't create the file, just used to verify the command has run correctly.
 
@@ -150,7 +150,7 @@ first_output = myProcess.out[0]
 second_output = myProcess.out[2]
 ```
 
-### script
+### 3.1.3. script
 
 `script` - a piece of code. required. In """triple quotes""". By default it is bash but can do other languages with the relevant hashbang
 
@@ -174,7 +174,7 @@ echo '${message}' > '${greeting}.txt'
 
 https://nextflow.io/docs/latest/process.html
 
-## Workflows
+## 3.2. Workflows
 
 **Workflows** orchestrates the processes. You can view the workflow by clicking `Preview DAG`. 
 
@@ -190,17 +190,17 @@ workflow {
 ```
 https://nextflow.io/docs/latest/workflow.html  
 
-### main
+### 3.2.1. main
 
 `main` orchestrates the processes. Processes are run in the order the inputs become available, not the order you write them in `main`. If two processes have no dependency between them, they can run in parallel. Nextflow does this my creating a graph with the processes as nodes and the edges being the data between them. This is called a **dataflow model**.
 
-### publish
+### 3.2.2. publish
 
 `publish` - the publishes the results i.e. tells nextflow what output is important. By default this puts output in a `results` directory. This contains soft links to output in the task subdirectories. You can change this name using `-o newname` when running the pipeline.
 
 https://nextflow.io/docs/latest/workflow.html#publishing-outputs 
 
-## Output
+## 3.3. Output
 
 This tells Nextflow where to put the **output** files. It contains options for the output:
 
@@ -225,7 +225,7 @@ output {
     }
 }
 ```
-## Variables
+## 3.4. Variables
 
 **Variables** are declared using the data type it is. 
 
@@ -247,7 +247,7 @@ process sayHello {
 }
 ```
 
-## params
+## 3.5. params
 
 You can tell nextflow what the input is in the workflow:
 
@@ -285,9 +285,9 @@ nextflow run hello-world.nf --greeting "Hello"
 ```
 https://nextflow.io/docs/latest/config.html#workflow-parameters
 
-## Syntax
+## 3.6. Syntax
 
-### Quotes
+### 3.6.1. Quotes
 
 Quotes are handled by both groovy and bash. In the example below:
 
@@ -317,7 +317,7 @@ echo "\${var}" > "\${var}-output.txt" # echo "${var}" > "${var}-output.txt"
 """
 ```
 
-### Dynamic Closures
+### 3.6.2. Dynamic Closures
 
 A **dynamic closure**  is a block of code that can be passed around like a variable it is dynamic because:
 
@@ -332,7 +332,7 @@ For example:
 { greeting -> "Before flatten: $greeting" }
 ```
 
-## Channels
+## 3.7. Channels
 
 Often you'll want to run the same script with multiple inputs. Channels are streams that allow you to shuttle these inputs from one step to another in multi-step workflows in parallel in isolation. You create a channel at the beginning of the workflow. Each process consumes and creates channels automatically. 
 
@@ -362,7 +362,7 @@ workflow {
 ```
 https://nextflow.io/docs/latest/workflow.html
 
-### Channel Factories
+### 3.7.1. Channel Factories
 
 A **channel factory** is a type of **operator** that creates channels. Different channel factories create channels that emit different types of data like values or files. 
 
@@ -373,7 +373,7 @@ A **channel factory** is a type of **operator** that creates channels. Different
 
 https://nextflow.io/docs/latest/reference/channel.html 
 
-### Operators
+### 3.7.2. Operators
 
 The `channel` object has several **operators** that can add functionality. These happen in order like pipes in tidyverse.
 
@@ -414,7 +414,7 @@ workfow {
 
 https://nextflow.io/docs/latest/reference/operator.html 
 
-## Modules
+## 3.8. Modules
 
 Modules are like methods. Instead of putting everything in `main` you can write them elsewhere an import them. These can be for each process. This means they can be shared between pipelines and collaborators through nf-core. By convention they are usually stored in `modules/`.
 
@@ -426,7 +426,7 @@ include { sayHello } from `./modules/sayHello.nf`
 
 https://nextflow.io/docs/latest/module.html 
 
-# Containers
+# 4. Containers
 
 You can use containers to run processes and Nextflow will:
 
@@ -435,7 +435,7 @@ You can use containers to run processes and Nextflow will:
 * Run the process inside the container
 * Clean up the container after
 
-## Using Docker
+## 4.1. Using Docker
 
 Download the image URI e.g. from wave. 
 
@@ -458,7 +458,7 @@ Mount a volume.
 docker run --rm -v <local filesystem>:<location in the container>
 ```
 
-## Add to a Script
+## 4.2. Add to a Script
 
 You cn add containers to processes using the `container` keyword.
 
@@ -482,7 +482,7 @@ process.container = <URI>
 
 You can see how this is working by looking at the `.command.run` file in the `nxf_launch` function.
 
-# Config Files
+# 5. Config Files
 
 There are multiple ways config files can be managed. They can be stored in different places and are retrieved in an order of precedence:
 
@@ -531,7 +531,7 @@ params {
 }
 ```
 
-### Parameter Files
+### 5.0.1. Parameter Files
 
 This is a reproducible way of providing parameters. They can be used by using `-params-file`. This is another good way of testing or getting someone else to run with specific parameters. 
 
@@ -557,9 +557,9 @@ character: "tux"
 }
 ```
 
-## Outputs
+## 5.1. Outputs
 
-### CLI Option
+### 5.1.1. CLI Option
 
 You can change the directory results are published to from `results` to a different directory using `-outputDir` or `-o`.
 
@@ -567,7 +567,7 @@ You can change the directory results are published to from `results` to a differ
 nextflow run hello.nf -o <output dir name>
 ```
 
-### Config
+### 5.1.2. Config
 
 **Change output dir**
 
@@ -595,9 +595,9 @@ workflow {
 workflow.output.mode = 'copy'
 ```
 
-## Environments
+## 5.2. Environments
 
-### Docker
+### 5.2.1. Docker
 
 You can specify Docker:
 
@@ -605,7 +605,7 @@ You can specify Docker:
 docker.enabled = true
 ```
 
-### Conda
+### 5.2.2. Conda
 
 You can also use conda. This creates a separate conda environment for each process which avoids clashes between different process dependencies. Nextflow will cache these environments. 
 
@@ -627,7 +627,7 @@ You can add both conda and a container platform so the user can choose. You can 
 
 https://nextflow.io/docs/latest/conda.html 
 
-## Platforms
+## 5.3. Platforms
 
 Nextflow allows pipelines to be run on many different compute infrastructures. The choice of executor is set by the `executor` process directive. 
 
@@ -646,7 +646,7 @@ This is done at the process level, so different processes can have different exe
 
 https://nextflow.io/docs/latest/executor.html 
 
-## Compute Resources
+## 5.4. Compute Resources
 
 Nextflow provides a standard syntax to provide HPC platforms with the right parameters. Nextflow takes these and generates the right scripts. They are specified using these process directives:
 
@@ -689,7 +689,7 @@ process {
 }
 ```
 
-### Usage Report
+### 5.4.1. Usage Report
 
 Nextflow can generate a usage report that you can use to optimise the config `cpus` and `memory` parameters using `-with-report`.
 
@@ -701,11 +701,11 @@ It also saves metadata like the parameters used.
 
 https://nextflow.io/docs/latest/reports.html 
 
-## Profiles
+## 5.5. Profiles
 
 Profiles allow you to have different configurations for different infrastructures.
 
-### Compute Resources
+### 5.5.1. Compute Resources
 
 ```groovy
 profiles {
@@ -731,7 +731,7 @@ You can select which profile to use in the command:
 nextflow run hello.ng -profile my_laptop
 ```
 
-### Parameters
+### 5.5.2. Parameters
 
 You can also include parameters instead of using a parameter file.
 
