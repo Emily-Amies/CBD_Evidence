@@ -266,12 +266,14 @@ Command line:
 params {
     greeting: String = 'Hello' // optional data type, optional default value
 }
+```
 
 ```groovy
 process sayHello {
     input:
     val greeting
 }
+```
 
 ```groovy
 workflow {
@@ -506,6 +508,7 @@ You can check what the resolved configuration is using `nextflow config`.
 
 ```bash
 nextflow config -profile my_laptop,test
+```
 
 ## Parameters
 
@@ -750,7 +753,4 @@ You can combine more than one profile that will be added in order:
 nextflow run hello.nf -profile my_laptop,test
 ```
 
-
 https://nextflow.io/docs/latest/config.html
-
-
