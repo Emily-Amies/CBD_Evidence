@@ -1,5 +1,3 @@
-<span style="font-size: 2em; font-weight: bold; color: teal;">Nextflow</span>
-
 # 1. Intro
 
 Nextflow is a workflow language to make reproducible workflows at scale.
